@@ -35,19 +35,21 @@ int isMatch(char open, char close) {
             ((open == '{') && (close == '}'));
 }
 
-// ===== Task 2: Implement isValid() =====
-// Return 1 if string s has valid bracket nesting, 0 otherwise.
-//
-// Think before coding:
-//   - What should happen when you see an open bracket?
-//   - What should happen when you see a close bracket?
-//   - What does an empty stack at the end mean?
-int isValid(char *s) {
-    for(int i = 0; s[i] != '\0'; i++){
-        ;
-    }
 
-    // TODO
+int isValid(char *s) {
+    tos = -1;
+    for(int i = 0; s[i] != '\0'; i++){
+        if (s[i] == '(' || s[i] == '{' || s[i] == '['  ){
+            push(s[i]);
+        }
+        else{
+            if(isEmpty() || !isMatch(top(), s[i])) return 0;
+            pop();
+        }
+    }
+    if(isEmpty()) return 1;
+    return 0;
+      
 }
 
 int main() {

@@ -15,9 +15,9 @@ Output:
 */
 
 #include <stdio.h>
-#define MAXVAL 1000001
-
-int freq[MAXVAL];
+#include <map>
+using namespace std;
+map<int, int> myMap;
 
 int main() {
     int n, x;
@@ -25,9 +25,11 @@ int main() {
     scanf("%d", &n);
     for (int i = 0; i < n; i++) {
         scanf("%d", &x);
-        // TODO: บันทึก frequency
+        myMap[x] ++;
+    }
+    for(auto &[k, v]: myMap){
+        printf("%d -> %d\n", k, v);
     }
 
-    // TODO: พิมพ์แต่ละค่าและ frequency ตามลำดับ
     return 0;
 }

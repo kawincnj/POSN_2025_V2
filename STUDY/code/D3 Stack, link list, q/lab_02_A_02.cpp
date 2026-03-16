@@ -33,7 +33,9 @@ int main() {
     clock_t t;
     t = clock();
 
-    // TODO Understanding
+//     Input:  11 4 5 2 10 8
+//     Output: -1 5 10 10 -1 -1
+
     for(int i = n - 1; i >= 0; i--){
         while(!isEmpty() && top() <= a[i])
             pop();

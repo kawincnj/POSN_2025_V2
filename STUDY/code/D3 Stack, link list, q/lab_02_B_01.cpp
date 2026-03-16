@@ -53,10 +53,29 @@ int main() {
     memset(vis,   0, sizeof(vis));
     qfront = qrear = 0;
 
-    // TODO: BFS from (sr, sc) to (er, ec)
-    // Initialize queue, mark start
-    // Process queue, expand neighbors
-    // Print dist[er][ec]
+    dist[sr][sc] = 0;
+    vis[sr][sc] = 1; 
+    qr[qrear] = sr; qc[qrear] = sc;
+    qrear++;
+
+    while(qfront < qrear ){
+        int r = qr[qfront];
+        int c = qc[qfront];
+        qfront ++;
+
+        for (int i =0; i<4; i++){
+            int nr = r + dx[i];
+            int nc = c + dy[i];
+
+            if(nr >= 0 && nr < n && nc >= 0 && nc < m && vis[nr][nc] != 1 && (grid[nr][nc] != '#')){
+                qr[qrear] = nr; qc[qrear] = nc;
+                vis[nr][nc] = 1;
+                dist[nr][nc] = dist[r][c] + 1;
+                qrear ++;
+            }
+        }
+    }
+
 
     printf("%d\n", dist[er][ec]);
     return 0;

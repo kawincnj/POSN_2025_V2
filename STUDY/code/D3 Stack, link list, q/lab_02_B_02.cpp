@@ -25,11 +25,13 @@ Constraints: N, M ≤ 10
 int grid[MAXN][MAXN];
 int dist[MAXN][MAXN];
 int qr[MAXN*MAXN], qc[MAXN*MAXN];
-int qfront, qrear;
+int qfront = 0, qrear = 0;
 
 int dx[] = {0, 0, 1, -1};
 int dy[] = {1, -1, 0, 0};
 
+int good = 0;
+int mn = 0;
 int main() {
     int n, m;
     
@@ -37,12 +39,38 @@ int main() {
     for (int i = 0; i < n; i++)
         for (int j = 0; j < m; j++)
             scanf("%d", &grid[i][j]);
+    
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < m; j++)
+            if(grid[i][j] == 2){
+                qr[qrear] = i; qc[qrear] = j;
+                qrear ++;
+                dist[i][j] = 0;
+            }else if(grid[i][j] == 1) good ++;
+    
+    while(qfront < qrear){
+        int r = qr[qfront];
+        int c = qc[qfront];
+        qfront ++;
 
-    // TODO: Multi-source BFS
-    // 1. Enqueue ALL initially rotten oranges (dist=0)
-    // 2. BFS spreading rot
-    // 3. Check if any fresh orange remains
-    // 4. Return max dist, or -1
+        for(int i =0; i <4; i++){
+            int nr = r + dx[i];
+            int nc = c + dy[i];
+
+            if(nc >= 0 && nr >= 0 && nr<n && nc<m && grid[nr][nc] == 1 ){
+                grid[nr][nc] = 2;
+                dist[nr][nc] = dist[r][c] + 1;
+                mn = dist[nr][nc];
+                qr[qrear] = nr; qc[qrear] = nc;
+                qrear ++;
+                good --;
+            }
+        }
+    }
+
+    if(! good){printf("%d", mn);}
+    else printf("%d", -1);
+    
 
     return 0;
 }

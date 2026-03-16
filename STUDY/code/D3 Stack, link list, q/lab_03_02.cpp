@@ -48,11 +48,26 @@ int main() {
     int n, t;
    
     scanf("%d %d", &n, &t);
-    for (int i = 1; i <= n; i++) scanf("%d", &a[i]);
+    for (int i = 1; i <= n; i++){
+        scanf("%d", &a[i]);
+    }
 
-    // TODO:
-    // ระวัง: ห้ามจับคู่ element กับตัวเอง
+    int found = 0;
+    for (int i = 1; i <= n; i++) {
+        int target = t - a[i];
+        
+        int pair_idx = ht_get(target);
+        
+        if (pair_idx != -1) {
+            printf("%d %d\n", pair_idx, i);
+            found = 1;
+            break; 
+        }
+        
+        ht_insert(a[i], i);
+    }
 
-    printf("NONE\n");
+    if (!found) printf("NONE\n");
+
     return 0;
 }
