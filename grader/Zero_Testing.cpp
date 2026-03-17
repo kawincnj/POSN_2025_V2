@@ -12,6 +12,5 @@ int main(){
     }
     cout << zero ? 1 : 0;
 
-
     return 0;
 }
