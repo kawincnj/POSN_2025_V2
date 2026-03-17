@@ -11,16 +11,22 @@
 Constraints: |s| ≤ 100,000
 
 */
-
-#include <stdio.h>
-#include <string.h>
+#include <bits/stdc++.h>
+using namespace std;
 
 int main() {
-    char s[100005];
-   
-    scanf("%s", s);
+    int a[1000] = {0};
+    string s;
 
-    // TODO
+   cin >> s;
+   for(auto &i : s){
+    a[i] ++;
+   }
+   int odd= 0;
+   for(auto &i : a){
+    if(i% 2 != 0) odd++;
+   }
+   cout << ((odd > 1) ? "NO" : "YES");
 
     return 0;
 }

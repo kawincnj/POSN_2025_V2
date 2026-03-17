@@ -51,16 +51,16 @@ unsigned int str_hash(const char *s) {
 }
 
 void add(const char *s) {
-    // TODO: หา slot (linear probe) แล้วเพิ่ม count
+    //  หา slot (linear probe) แล้วเพิ่ม count
 }
 
 int count(const char *s) {
-    // TODO: คืน frequency ของ s
+    //  คืน frequency ของ s
     return 0;
 }
 
 void rank_top3() {
-    // TODO: scan ht ทั้งหมด หา top 3 ตาม frequency
+    //  scan ht ทั้งหมด หา top 3 ตาม frequency
     // tie-break ด้วย lexicographic order
     // พิมพ์ออกมาไม่เกิน 3 รายการ
 }

@@ -49,7 +49,7 @@ int main() {
 
     qsort(tasks, n, sizeof(Task), cmp);
 
-    // TODO: จำลองโปรเซสเซอร์ด้วย queue
+    // จำลองโปรเซสเซอร์ด้วย queue
 
     return 0;
 }
