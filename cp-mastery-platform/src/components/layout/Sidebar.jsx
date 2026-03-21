@@ -21,8 +21,9 @@ const Sidebar = ({ isOpen }) => {
       isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
     )}>
       <div className="p-4 space-y-6">
-        <NavLink 
-          to="/" 
+        <NavLink
+          to="/"
+          end
           className={({ isActive }) => cn(
             "flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-bold transition-all",
             isActive ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20" : "hover:bg-accent text-muted-foreground"
@@ -31,6 +32,43 @@ const Sidebar = ({ isOpen }) => {
           <LucideIcons.LayoutGrid className="w-4 h-4" />
           Category Explorer
         </NavLink>
+
+        {/* Tools Section */}
+        <div className="space-y-1">
+          <h3 className="px-4 text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-2">
+            Tools
+          </h3>
+          <NavLink
+            to="/roadmap"
+            className={({ isActive }) => cn(
+              "flex items-center gap-3 px-4 py-2 rounded-lg text-xs font-bold transition-all",
+              isActive ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-accent"
+            )}
+          >
+            <LucideIcons.Map className="w-3.5 h-3.5" />
+            Learning Roadmap
+          </NavLink>
+          <NavLink
+            to="/cheatsheet"
+            className={({ isActive }) => cn(
+              "flex items-center gap-3 px-4 py-2 rounded-lg text-xs font-bold transition-all",
+              isActive ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-accent"
+            )}
+          >
+            <LucideIcons.FileText className="w-3.5 h-3.5" />
+            Cheat Sheet
+          </NavLink>
+          <NavLink
+            to="/comparisons"
+            className={({ isActive }) => cn(
+              "flex items-center gap-3 px-4 py-2 rounded-lg text-xs font-bold transition-all",
+              isActive ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-accent"
+            )}
+          >
+            <LucideIcons.GitCompare className="w-3.5 h-3.5" />
+            Comparisons
+          </NavLink>
+        </div>
 
         <div className="space-y-4">
           <h3 className="px-4 text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">

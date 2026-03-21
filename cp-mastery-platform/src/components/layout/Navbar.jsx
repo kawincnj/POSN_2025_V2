@@ -124,8 +124,9 @@ const Navbar = ({ onMenuClick }) => {
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <input
               ref={inputRef}
+              data-search-input
               type="text"
-              placeholder="Search topics, algorithms, data structures..."
+              placeholder="Search topics... (Ctrl+K)"
               value={searchTerm}
               onChange={handleInputChange}
               onFocus={() => searchTerm.trim() && setShowSuggestions(true)}

@@ -6,7 +6,7 @@ import {
   BookMarked, CheckCircle2, Circle, ArrowLeft, Copy, Check, Terminal,
   ChevronLeft, ChevronRight, ChevronDown, ChevronUp,
   Lightbulb, Target, AlertTriangle, Clock, ExternalLink, Tag,
-  BookOpen, Layers, TrendingUp, Code2, Play
+  BookOpen, Layers, TrendingUp, Code2, Play, StickyNote
 } from 'lucide-react';
 
 // Lazy load visualizers
@@ -88,7 +88,7 @@ const TopicPage = () => {
   const { id } = useParams();
   const topic = topics.find(t => t.id === id);
   const category = categories.find(c => c.id === topic?.categoryId);
-  const { completedTopics, toggleTopic, bookmarks, toggleBookmark } = useUser();
+  const { completedTopics, toggleTopic, bookmarks, toggleBookmark, getNote, setNote } = useUser();
   const [copied, setCopied] = useState(false);
   const [activeSnippetIdx, setActiveSnippetIdx] = useState(0);
 
@@ -522,6 +522,24 @@ const TopicPage = () => {
           </section>
         )}
       </div>
+
+      {/* Personal Notes */}
+      <section className="space-y-4">
+        <div className="flex items-center gap-2">
+          <div className="h-8 w-1 bg-primary rounded-full" />
+          <h2 className="text-2xl font-bold">My Notes</h2>
+          <StickyNote className="w-5 h-5 text-muted-foreground" />
+        </div>
+        <textarea
+          value={getNote(topic.id)}
+          onChange={(e) => setNote(topic.id, e.target.value)}
+          placeholder="Write your personal notes for this topic... (auto-saved)"
+          className="w-full min-h-[120px] p-4 rounded-2xl border bg-card text-sm resize-y outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground/50"
+        />
+        {getNote(topic.id) && (
+          <p className="text-xs text-muted-foreground">Notes are saved automatically to your browser.</p>
+        )}
+      </section>
 
       {/* Navigation between topics */}
       <div className="flex items-center justify-between pt-6 border-t">
