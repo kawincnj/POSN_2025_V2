@@ -1,3 +1,5 @@
+import { topicEnhancements } from './topicEnhancements';
+
 export const categories = [
   {
     id: 'intro',
@@ -49,7 +51,7 @@ export const categories = [
   }
 ];
 
-export const topics = [
+const _rawTopics = [
   // ==========================================
   // Chapter 1: Introduction to CP
   // ==========================================
@@ -2606,3 +2608,9 @@ int idaStar(State start) {
 }`
   }
 ];
+
+// Merge topic enhancements into base topics
+export const topics = _rawTopics.map(topic => ({
+  ...topic,
+  ...(topicEnhancements[topic.id] || {}),
+}));
