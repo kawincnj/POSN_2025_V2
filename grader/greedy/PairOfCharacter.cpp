@@ -2,51 +2,47 @@
 using namespace std;
 
 int main(){
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
+    cin.tie(0)->sync_with_stdio(0);
 
-    int n;
-    cin >> n;
-    string s, t;
-    cin >> s >> t;
+    vector<int> v1(27, 0), v2(27, 0);
+    int n; cin >> n;
 
-    vector<int> cntS(26, 0), cntT(26, 0);
-    int qs = 0, qt = 0;
-
-    for(char c : s){
-        if(c == '?') qs++;
-        else cntS[c - 'a']++;
+    for(int i = 0; i < n; i++){
+        char c; cin >> c;
+        if(c == '?') v1[26]++;
+        else v1[c - 'a']++;
     }
 
-    for(char c : t){
-        if(c == '?') qt++;
-        else cntT[c - 'a']++;
+    for(int i = 0; i < n; i++){
+        char c; cin >> c;
+        if(c == '?') v2[26]++;
+        else v2[c - 'a']++;
     }
 
     int ans = 0;
 
     for(int i = 0; i < 26; i++){
-        int m = min(cntS[i], cntT[i]);
+        int m = min(v1[i], v2[i]);
         ans += m;
-        cntS[i] -= m;
-        cntT[i] -= m;
+        v1[i] -= m;
+        v2[i] -= m;
     }
 
     for(int i = 0; i < 26; i++){
-        int m = min(qs, cntT[i]);
+        int m = min(v1[26], v2[i]);
         ans += m;
-        qs -= m;
-        cntT[i] -= m;
+        v1[26] -= m;
+        v2[i] -= m;
     }
 
     for(int i = 0; i < 26; i++){
-        int m = min(qt, cntS[i]);
+        int m = min(v2[26], v1[i]);
         ans += m;
-        qt -= m;
-        cntS[i] -= m;
+        v2[26] -= m;
+        v1[i] -= m;
     }
 
-    ans += min(qs, qt);
+    ans += min(v1[26], v2[26]);
 
     cout << ans;
 }
