@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
-import { categories, topics } from '../data/curriculum';
+import { useTranslatedTopics, useTranslatedCategories } from '../hooks/useTranslatedData';
 import { useUser } from '../contexts/UserContext';
 import { ArrowLeft, ChevronRight, BookOpen, CheckCircle2, Filter, Clock, Tag } from 'lucide-react';
+import { useLang } from '../contexts/LanguageContext';
 
 const CategoryPage = () => {
   const { id } = useParams();
+  const topics = useTranslatedTopics();
+  const categories = useTranslatedCategories();
   const category = categories.find(c => c.id === id);
   const categoryTopics = topics.filter(t => t.categoryId === id);
   const { completedTopics } = useUser();
-  const [filter, setFilter] = useState('all'); // all, beginner, intermediate, advanced, completed, incomplete
+  const { t } = useLang();
+  const [filter, setFilter] = useState('all');
 
   if (!category) {
     return <Navigate to="/" replace />;
@@ -26,12 +30,12 @@ const CategoryPage = () => {
   });
 
   const filters = [
-    { key: 'all', label: 'All' },
-    { key: 'beginner', label: 'Beginner' },
-    { key: 'intermediate', label: 'Intermediate' },
-    { key: 'advanced', label: 'Advanced' },
-    { key: 'completed', label: 'Completed' },
-    { key: 'incomplete', label: 'To Do' },
+    { key: 'all', label: t('category.all') },
+    { key: 'beginner', label: t('category.beginner') },
+    { key: 'intermediate', label: t('category.intermediate') },
+    { key: 'advanced', label: t('category.advanced') },
+    { key: 'completed', label: t('category.completed') },
+    { key: 'incomplete', label: t('category.toDo') },
   ];
 
   return (
@@ -39,7 +43,7 @@ const CategoryPage = () => {
       <div className="flex flex-col gap-4 border-b pb-6">
         <Link to="/" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
           <ArrowLeft className="w-4 h-4" />
-          Back to Categories
+          {t('category.backToCategories')}
         </Link>
         <h1 className="text-4xl font-bold">{category.title}</h1>
         <p className="text-xl text-muted-foreground">{category.description}</p>
@@ -47,8 +51,8 @@ const CategoryPage = () => {
         {/* Progress bar */}
         <div className="space-y-2 max-w-md">
           <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">Progress</span>
-            <span className="font-bold text-primary">{catCompleted}/{categoryTopics.length} mastered ({Math.round(pct)}%)</span>
+            <span className="text-muted-foreground">{t('category.progress')}</span>
+            <span className="font-bold text-primary">{catCompleted}/{categoryTopics.length} {t('home.mastered')} ({Math.round(pct)}%)</span>
           </div>
           <div className="h-2 bg-muted rounded-full overflow-hidden">
             <div className="h-full bg-primary rounded-full transition-all duration-500"
@@ -119,7 +123,7 @@ const CategoryPage = () => {
         {filteredTopics.length === 0 && (
           <div className="col-span-full py-12 text-center text-muted-foreground border border-dashed rounded-xl">
             <BookOpen className="w-12 h-12 mx-auto mb-4 opacity-20" />
-            <p>{filter === 'all' ? `More topics for ${category.title} coming soon!` : `No ${filter} topics found.`}</p>
+            <p>{filter === 'all' ? t('category.moreTopics') : t('category.noTopics')}</p>
           </div>
         )}
       </div>

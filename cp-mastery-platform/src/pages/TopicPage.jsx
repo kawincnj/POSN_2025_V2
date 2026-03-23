@@ -1,7 +1,8 @@
 import React, { useState, lazy, Suspense, useMemo } from 'react';
 import { useParams, Navigate, Link } from 'react-router-dom';
-import { topics, categories } from '../data/curriculum';
+import { useTranslatedTopics, useTranslatedCategories } from '../hooks/useTranslatedData';
 import { useUser } from '../contexts/UserContext';
+import { useLang } from '../contexts/LanguageContext';
 import {
   BookMarked, CheckCircle2, Circle, ArrowLeft, Copy, Check, Terminal,
   ChevronLeft, ChevronRight, ChevronDown, ChevronUp,
@@ -86,9 +87,12 @@ const getPythonTutorUrl = (code) => {
 
 const TopicPage = () => {
   const { id } = useParams();
+  const topics = useTranslatedTopics();
+  const categories = useTranslatedCategories();
   const topic = topics.find(t => t.id === id);
   const category = categories.find(c => c.id === topic?.categoryId);
   const { completedTopics, toggleTopic, bookmarks, toggleBookmark, getNote, setNote } = useUser();
+  const { t } = useLang();
   const [copied, setCopied] = useState(false);
   const [activeSnippetIdx, setActiveSnippetIdx] = useState(0);
 
@@ -213,7 +217,7 @@ const TopicPage = () => {
           className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors group"
         >
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-          Back to {category?.title}
+          {t('topic.backTo')} {category?.title}
         </Link>
 
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -266,9 +270,9 @@ const TopicPage = () => {
               }`}
             >
               {isCompleted ? (
-                <><CheckCircle2 className="w-5 h-5" /> Mastered</>
+                <><CheckCircle2 className="w-5 h-5" /> {t('topic.mastered')}</>
               ) : (
-                <><Circle className="w-5 h-5" /> Mark as Mastered</>
+                <><Circle className="w-5 h-5" /> {t('topic.markMastered')}</>
               )}
             </button>
           </div>
@@ -284,7 +288,7 @@ const TopicPage = () => {
                 <Lightbulb className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="text-xl font-bold mb-3 text-blue-900 dark:text-blue-300">Why Learn This?</h3>
+                <h3 className="text-xl font-bold mb-3 text-blue-900 dark:text-blue-300">{t('topic.whyLearn')}</h3>
                 <div className="space-y-2 text-blue-800 dark:text-blue-200">
                   {topic.whyLearn.split('\n').map((line, i) => (
                     line.trim() ? (
@@ -306,7 +310,7 @@ const TopicPage = () => {
           <section className="space-y-4">
             <div className="flex items-center gap-2">
               <div className="h-8 w-1 bg-primary rounded-full" />
-              <h2 className="text-2xl font-bold">Interactive Visualization</h2>
+              <h2 className="text-2xl font-bold">{t('topic.visualization')}</h2>
             </div>
             <div className="rounded-2xl overflow-hidden border bg-card shadow-lg">
               <Suspense fallback={<VisualizerFallback />}>
@@ -320,10 +324,10 @@ const TopicPage = () => {
         {topic.whenToUse && (
           <CollapsibleSection
             icon={Target}
-            title="When to Use"
+            title={t('topic.whenToUse')}
             color="bg-green-100 text-green-600 dark:bg-green-900/50 dark:text-green-400"
             defaultOpen={true}
-            badge="Pattern recognition"
+            badge={t('topic.patternRecognition')}
           >
             <ContentRenderer content={topic.whenToUse} />
           </CollapsibleSection>
@@ -332,10 +336,10 @@ const TopicPage = () => {
         {/* Concept Deep-Dive */}
         <CollapsibleSection
           icon={BookOpen}
-          title="Concept Deep-Dive"
+          title={t('topic.conceptDeepDive')}
           color="bg-purple-100 text-purple-600 dark:bg-purple-900/50 dark:text-purple-400"
           defaultOpen={true}
-          badge="Full explanation"
+          badge={t('topic.fullExplanation')}
         >
           <ContentRenderer content={topic.content} />
         </CollapsibleSection>
@@ -344,10 +348,10 @@ const TopicPage = () => {
         {topic.commonMistakes && (
           <CollapsibleSection
             icon={AlertTriangle}
-            title="Common Mistakes & Pitfalls"
+            title={t('topic.commonMistakes')}
             color="bg-orange-100 text-orange-600 dark:bg-orange-900/50 dark:text-orange-400"
             defaultOpen={false}
-            badge="Avoid these traps"
+            badge={t('topic.avoidTraps')}
           >
             <div className="space-y-3">
               {topic.commonMistakes.split('\n').filter(l => l.trim()).map((line, i) => (
@@ -364,10 +368,10 @@ const TopicPage = () => {
         {topic.complexityAnalysis && (
           <CollapsibleSection
             icon={TrendingUp}
-            title="Complexity Analysis"
+            title={t('topic.complexityAnalysis')}
             color="bg-cyan-100 text-cyan-600 dark:bg-cyan-900/50 dark:text-cyan-400"
             defaultOpen={false}
-            badge={topic.timeComplexity || 'Performance'}
+            badge={topic.timeComplexity || t('topic.performance')}
           >
             <ContentRenderer content={topic.complexityAnalysis} />
           </CollapsibleSection>
@@ -379,7 +383,7 @@ const TopicPage = () => {
             <div className="flex items-center justify-between flex-wrap gap-3">
               <div className="flex items-center gap-2">
                 <div className="h-8 w-1 bg-primary rounded-full" />
-                <h2 className="text-2xl font-bold">Implementation Template</h2>
+                <h2 className="text-2xl font-bold">{t('topic.implementationTemplate')}</h2>
               </div>
               <div className="flex items-center gap-2">
                 {pythonTutorUrl && (
@@ -390,7 +394,7 @@ const TopicPage = () => {
                     className="flex items-center gap-2 px-4 py-2 text-sm font-medium bg-green-50 text-green-700 hover:bg-green-100 dark:bg-green-900/20 dark:text-green-400 dark:hover:bg-green-900/40 rounded-lg transition-colors border border-green-200 dark:border-green-800"
                   >
                     <Play className="w-4 h-4" />
-                    <span className="hidden sm:inline">Visualize on</span> Python Tutor
+                    <span className="hidden sm:inline">{t('topic.visualizeOn')}</span> Python Tutor
                     <ExternalLink className="w-3 h-3" />
                   </a>
                 )}
@@ -399,7 +403,7 @@ const TopicPage = () => {
                   className="flex items-center gap-2 px-4 py-2 text-sm font-medium bg-secondary hover:bg-secondary/80 rounded-lg transition-colors border"
                 >
                   {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
-                  {copied ? "Copied!" : "Copy"}
+                  {copied ? t('topic.copied') : t('topic.copy')}
                 </button>
               </div>
             </div>
@@ -434,11 +438,11 @@ const TopicPage = () => {
                       <span>{activeSnippet.name.toLowerCase().replace(/\s+/g, '_')}.cpp</span>
                     </div>
                     {!activeSnippet.pythonTutorCode && (
-                      <span className="text-[10px] text-gray-500 bg-gray-800 px-2 py-0.5 rounded">snippet — not runnable</span>
+                      <span className="text-[10px] text-gray-500 bg-gray-800 px-2 py-0.5 rounded">{t('topic.snippetNotRunnable')}</span>
                     )}
                     {activeSnippet.pythonTutorCode && (
                       <span className="text-[10px] text-green-400 bg-green-900/30 px-2 py-0.5 rounded flex items-center gap-1">
-                        <Play className="w-2.5 h-2.5" /> runnable
+                        <Play className="w-2.5 h-2.5" /> {t('topic.runnable')}
                       </span>
                     )}
                   </div>
@@ -456,7 +460,7 @@ const TopicPage = () => {
           <section className="space-y-4">
             <div className="flex items-center gap-2">
               <div className="h-8 w-1 bg-primary rounded-full" />
-              <h2 className="text-2xl font-bold">Related Topics</h2>
+              <h2 className="text-2xl font-bold">{t('topic.relatedTopics')}</h2>
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
               {relatedTopics.map(rt => {
@@ -491,7 +495,7 @@ const TopicPage = () => {
           <section className="space-y-4">
             <div className="flex items-center gap-2">
               <div className="h-8 w-1 bg-primary rounded-full" />
-              <h2 className="text-2xl font-bold">Practice Problems</h2>
+              <h2 className="text-2xl font-bold">{t('topic.practiceProblems')}</h2>
             </div>
             <div className="grid gap-3">
               {topic.practiceProblems.map((problem, i) => (
@@ -527,17 +531,17 @@ const TopicPage = () => {
       <section className="space-y-4">
         <div className="flex items-center gap-2">
           <div className="h-8 w-1 bg-primary rounded-full" />
-          <h2 className="text-2xl font-bold">My Notes</h2>
+          <h2 className="text-2xl font-bold">{t('topic.myNotes')}</h2>
           <StickyNote className="w-5 h-5 text-muted-foreground" />
         </div>
         <textarea
           value={getNote(topic.id)}
           onChange={(e) => setNote(topic.id, e.target.value)}
-          placeholder="Write your personal notes for this topic... (auto-saved)"
+          placeholder={t('topic.notesPlaceholder')}
           className="w-full min-h-[120px] p-4 rounded-2xl border bg-card text-sm resize-y outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground/50"
         />
         {getNote(topic.id) && (
-          <p className="text-xs text-muted-foreground">Notes are saved automatically to your browser.</p>
+          <p className="text-xs text-muted-foreground">{t('topic.notesSaved')}</p>
         )}
       </section>
 
@@ -547,7 +551,7 @@ const TopicPage = () => {
           <Link to={`/topic/${prevTopic.id}`} className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors group">
             <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
             <div className="text-left">
-              <div className="text-[10px] uppercase text-muted-foreground">Previous</div>
+              <div className="text-[10px] uppercase text-muted-foreground">{t('topic.previous')}</div>
               <div className="group-hover:text-primary">{prevTopic.title}</div>
             </div>
           </Link>
@@ -555,7 +559,7 @@ const TopicPage = () => {
         {nextTopic ? (
           <Link to={`/topic/${nextTopic.id}`} className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors group">
             <div className="text-right">
-              <div className="text-[10px] uppercase text-muted-foreground">Next</div>
+              <div className="text-[10px] uppercase text-muted-foreground">{t('topic.next')}</div>
               <div className="group-hover:text-primary">{nextTopic.title}</div>
             </div>
             <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -564,7 +568,7 @@ const TopicPage = () => {
       </div>
 
       <div className="py-10 border-t text-center text-muted-foreground text-sm">
-        Competitive Programming Mastery Platform &bull; Based on CP2 by Steven & Felix Halim
+        {t('topic.footer')}
       </div>
     </div>
   );

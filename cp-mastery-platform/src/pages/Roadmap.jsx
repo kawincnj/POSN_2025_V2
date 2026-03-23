@@ -1,62 +1,31 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { topics, categories } from '../data/curriculum';
+import { useTranslatedTopics, useTranslatedCategories } from '../hooks/useTranslatedData';
 import { useUser } from '../contexts/UserContext';
+import { useLang } from '../contexts/LanguageContext';
 import { CheckCircle2, Circle, ChevronRight, Lock, ArrowRight, Trophy } from 'lucide-react';
 
+const PHASE_KEYS = [
+  'foundation', 'coreAlgorithms', 'graphFundamentals', 'dataStructures',
+  'advancedGraph', 'mathematics', 'advancedDPStrings', 'expertTopics',
+];
+
 const LEARNING_PATH = [
-  {
-    phase: 1,
-    title: 'Foundation',
-    description: 'Master the basics before moving on',
-    topics: ['cpp-basics', 'ds-arrays', 'ds-sorting', 'ds-stacks-queues'],
-  },
-  {
-    phase: 2,
-    title: 'Core Algorithms',
-    description: 'Essential algorithmic techniques',
-    topics: ['algo-complete-search', 'algo-greedy', 'algo-dnc', 'algo-dp-intro'],
-  },
-  {
-    phase: 3,
-    title: 'Graph Fundamentals',
-    description: 'Learn graph representation and traversal',
-    topics: ['graph-representation', 'graph-traversal', 'graph-topo-sort', 'graph-sssp'],
-  },
-  {
-    phase: 4,
-    title: 'Data Structures',
-    description: 'Powerful data structures for competitive programming',
-    topics: ['ds-sets-maps', 'ds-priority-queue', 'ds-union-find', 'ds-fenwick', 'ds-segment-tree'],
-  },
-  {
-    phase: 5,
-    title: 'Advanced Graph',
-    description: 'Advanced graph algorithms',
-    topics: ['graph-bellman-ford', 'graph-floyd', 'graph-mst', 'graph-scc', 'graph-bridges'],
-  },
-  {
-    phase: 6,
-    title: 'Mathematics',
-    description: 'Number theory and combinatorics',
-    topics: ['math-primes', 'math-gcd-mod', 'math-combinatorics'],
-  },
-  {
-    phase: 7,
-    title: 'Advanced DP & Strings',
-    description: 'Complex dynamic programming and string algorithms',
-    topics: ['algo-dp-advanced', 'string-basics', 'string-kmp', 'string-dp', 'string-suffix'],
-  },
-  {
-    phase: 8,
-    title: 'Expert Topics',
-    description: 'Advanced topics for top competitors',
-    topics: ['graph-network-flow', 'graph-euler', 'geo-basics', 'geo-convex-hull', 'algo-game-theory'],
-  },
+  { phase: 1, titleKey: 'foundation', descKey: 'foundationDesc', topics: ['cpp-basics', 'ds-arrays', 'ds-sorting', 'ds-stacks-queues'] },
+  { phase: 2, titleKey: 'coreAlgorithms', descKey: 'coreAlgorithmsDesc', topics: ['algo-complete-search', 'algo-greedy', 'algo-dnc', 'algo-dp-intro'] },
+  { phase: 3, titleKey: 'graphFundamentals', descKey: 'graphFundamentalsDesc', topics: ['graph-representation', 'graph-traversal', 'graph-topo-sort', 'graph-sssp'] },
+  { phase: 4, titleKey: 'dataStructures', descKey: 'dataStructuresDesc', topics: ['ds-sets-maps', 'ds-priority-queue', 'ds-union-find', 'ds-fenwick', 'ds-segment-tree'] },
+  { phase: 5, titleKey: 'advancedGraph', descKey: 'advancedGraphDesc', topics: ['graph-bellman-ford', 'graph-floyd', 'graph-mst', 'graph-scc', 'graph-bridges'] },
+  { phase: 6, titleKey: 'mathematics', descKey: 'mathematicsDesc', topics: ['math-primes', 'math-gcd-mod', 'math-combinatorics'] },
+  { phase: 7, titleKey: 'advancedDPStrings', descKey: 'advancedDPStringsDesc', topics: ['algo-dp-advanced', 'string-basics', 'string-kmp', 'string-dp', 'string-suffix'] },
+  { phase: 8, titleKey: 'expertTopics', descKey: 'expertTopicsDesc', topics: ['graph-network-flow', 'graph-euler', 'geo-basics', 'geo-convex-hull', 'algo-game-theory'] },
 ];
 
 const Roadmap = () => {
   const { completedTopics } = useUser();
+  const { t } = useLang();
+  const topics = useTranslatedTopics();
+  const categories = useTranslatedCategories();
 
   const getPhaseProgress = (phase) => {
     const validTopics = phase.topics.filter(tid => topics.find(t => t.id === tid));
@@ -67,7 +36,7 @@ const Roadmap = () => {
   const isPhaseUnlocked = (phaseIdx) => {
     if (phaseIdx === 0) return true;
     const prev = getPhaseProgress(LEARNING_PATH[phaseIdx - 1]);
-    return prev.pct >= 50; // need 50% of previous phase to unlock
+    return prev.pct >= 50;
   };
 
   const totalCompleted = LEARNING_PATH.reduce((sum, phase) => sum + getPhaseProgress(phase).completed, 0);
@@ -77,16 +46,15 @@ const Roadmap = () => {
   return (
     <div className="space-y-8 animate-in fade-in duration-500 py-4">
       <div className="space-y-2">
-        <h1 className="text-4xl font-black tracking-tight">Learning Roadmap</h1>
-        <p className="text-lg text-muted-foreground">Follow this recommended path to master competitive programming step by step.</p>
+        <h1 className="text-4xl font-black tracking-tight">{t('roadmap.title')}</h1>
+        <p className="text-lg text-muted-foreground">{t('roadmap.subtitle')}</p>
       </div>
 
-      {/* Overall progress */}
       <div className="bg-card border rounded-2xl p-6 space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Trophy className="w-6 h-6 text-yellow-500" />
-            <span className="text-lg font-bold">Overall Progress</span>
+            <span className="text-lg font-bold">{t('roadmap.overallProgress')}</span>
           </div>
           <span className="text-2xl font-black text-primary">{Math.round(overallPct)}%</span>
         </div>
@@ -96,10 +64,9 @@ const Roadmap = () => {
             style={{ width: `${overallPct}%` }}
           />
         </div>
-        <p className="text-sm text-muted-foreground">{totalCompleted} of {totalTopics} topics mastered</p>
+        <p className="text-sm text-muted-foreground">{totalCompleted} {t('common.of')} {totalTopics} {t('roadmap.topicsMastered')}</p>
       </div>
 
-      {/* Phases */}
       <div className="space-y-6">
         {LEARNING_PATH.map((phase, phaseIdx) => {
           const progress = getPhaseProgress(phase);
@@ -110,7 +77,6 @@ const Roadmap = () => {
             <div key={phase.phase} className={`border rounded-2xl overflow-hidden transition-all ${
               !unlocked ? 'opacity-60' : isComplete ? 'border-green-200 dark:border-green-900/30' : ''
             }`}>
-              {/* Phase header */}
               <div className={`p-6 ${isComplete ? 'bg-green-50 dark:bg-green-950/20' : 'bg-card'}`}>
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-3">
@@ -121,14 +87,13 @@ const Roadmap = () => {
                       {isComplete ? <CheckCircle2 className="w-5 h-5" /> : unlocked ? phase.phase : <Lock className="w-4 h-4" />}
                     </div>
                     <div>
-                      <h2 className="text-xl font-bold">Phase {phase.phase}: {phase.title}</h2>
-                      <p className="text-sm text-muted-foreground">{phase.description}</p>
+                      <h2 className="text-xl font-bold">{t('roadmap.phase')} {phase.phase}: {t(`roadmap.${phase.titleKey}`)}</h2>
+                      <p className="text-sm text-muted-foreground">{t(`roadmap.${phase.descKey}`)}</p>
                     </div>
                   </div>
                   <span className="text-sm font-bold text-primary">{progress.completed}/{progress.total}</span>
                 </div>
 
-                {/* Progress bar */}
                 <div className="h-2 bg-muted rounded-full overflow-hidden">
                   <div
                     className={`h-full rounded-full transition-all duration-500 ${
@@ -139,7 +104,6 @@ const Roadmap = () => {
                 </div>
               </div>
 
-              {/* Topics in phase */}
               {unlocked && (
                 <div className="border-t divide-y">
                   {phase.topics.map(tid => {

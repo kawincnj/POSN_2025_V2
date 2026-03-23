@@ -9,9 +9,11 @@ import CheatSheet from './pages/CheatSheet';
 import Comparisons from './pages/Comparisons';
 import Roadmap from './pages/Roadmap';
 import { UserProvider } from './contexts/UserContext';
+import { LanguageProvider } from './contexts/LanguageContext';
 
 function App() {
   return (
+    <LanguageProvider>
     <UserProvider>
       <Router>
         <Routes>
@@ -28,6 +30,7 @@ function App() {
         </Routes>
       </Router>
     </UserProvider>
+    </LanguageProvider>
   );
 }
 

@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, Sun, Moon, Menu, GraduationCap, ArrowRight, Clock, Zap } from 'lucide-react';
+import { Search, Sun, Moon, Menu, GraduationCap, ArrowRight, Clock, Zap, Languages } from 'lucide-react';
 import { useUser } from '../../contexts/UserContext';
-import { topics, categories } from '../../data/curriculum';
+import { useLang } from '../../contexts/LanguageContext';
+import { useTranslatedTopics, useTranslatedCategories } from '../../hooks/useTranslatedData';
 
 const DIFFICULTY_COLORS = {
   Beginner: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
@@ -12,6 +13,9 @@ const DIFFICULTY_COLORS = {
 
 const Navbar = ({ onMenuClick }) => {
   const { darkMode, setDarkMode } = useUser();
+  const { t, toggleLang, lang } = useLang();
+  const topics = useTranslatedTopics();
+  const categories = useTranslatedCategories();
   const [searchTerm, setSearchTerm] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -126,7 +130,7 @@ const Navbar = ({ onMenuClick }) => {
               ref={inputRef}
               data-search-input
               type="text"
-              placeholder="Search topics... (Ctrl+K)"
+              placeholder={t('nav.searchPlaceholder')}
               value={searchTerm}
               onChange={handleInputChange}
               onFocus={() => searchTerm.trim() && setShowSuggestions(true)}
@@ -142,7 +146,7 @@ const Navbar = ({ onMenuClick }) => {
                   <>
                     <div className="px-3 py-2 text-[10px] font-bold uppercase tracking-wider text-muted-foreground border-b bg-muted/30">
                       <Zap className="w-3 h-3 inline mr-1" />
-                      {suggestions.length} result{suggestions.length !== 1 ? 's' : ''} found
+                      {suggestions.length} {t('nav.resultsFound')}
                     </div>
                     {suggestions.map(({ topic, score }, idx) => {
                       const category = categories.find(c => c.id === topic.categoryId);
@@ -179,14 +183,14 @@ const Navbar = ({ onMenuClick }) => {
                       className="flex items-center justify-center gap-2 px-3 py-2.5 text-xs font-semibold text-primary border-t bg-muted/20 hover:bg-accent/50 transition-colors"
                     >
                       <Search className="w-3 h-3" />
-                      View all results for "{searchTerm}"
+                      {t('nav.viewAll')} "{searchTerm}"
                     </Link>
                   </>
                 ) : (
                   <div className="px-4 py-6 text-center text-sm text-muted-foreground">
                     <Search className="w-6 h-6 mx-auto mb-2 opacity-30" />
-                    <p>No topics found for "<span className="font-medium">{searchTerm}</span>"</p>
-                    <p className="text-xs mt-1">Try "BFS", "DP", "Sorting", or "Graph"</p>
+                    <p>{t('nav.noResults')} "<span className="font-medium">{searchTerm}</span>"</p>
+                    <p className="text-xs mt-1">{t('nav.trySearch')}</p>
                   </div>
                 )}
               </div>
@@ -194,7 +198,15 @@ const Navbar = ({ onMenuClick }) => {
           </form>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
+          <button
+            onClick={toggleLang}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-bold text-muted-foreground hover:bg-accent rounded-full transition-colors"
+            title={lang === 'en' ? 'เปลี่ยนเป็นภาษาไทย' : 'Switch to English'}
+          >
+            <Languages className="w-4 h-4" />
+            {t('lang.switchTo')}
+          </button>
           <button
             onClick={() => setDarkMode(!darkMode)}
             className="p-2 text-muted-foreground hover:bg-accent rounded-full transition-colors"

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { topics, categories } from '../data/curriculum';
+import { useTranslatedTopics, useTranslatedCategories } from '../hooks/useTranslatedData';
+import { useLang } from '../contexts/LanguageContext';
 import { Clock, Copy, Check, ChevronDown, ChevronUp, Search, Filter } from 'lucide-react';
 
 const COMPLEXITY_TABLE = [
@@ -74,6 +75,9 @@ const ALGO_REFERENCE = [
 ];
 
 const CheatSheet = () => {
+  const { t } = useLang();
+  const topics = useTranslatedTopics();
+  const categories = useTranslatedCategories();
   const [filter, setFilter] = useState('');
   const [expandedSections, setExpandedSections] = useState(['complexity', 'ds', 'algo']);
 
@@ -113,8 +117,8 @@ const CheatSheet = () => {
   return (
     <div className="space-y-8 animate-in fade-in duration-500 py-4">
       <div className="space-y-2">
-        <h1 className="text-4xl font-black tracking-tight">Cheat Sheet</h1>
-        <p className="text-lg text-muted-foreground">Quick reference for all complexities, data structures, and algorithms.</p>
+        <h1 className="text-4xl font-black tracking-tight">{t('cheatSheet.title')}</h1>
+        <p className="text-lg text-muted-foreground">{t('cheatSheet.subtitle')}</p>
       </div>
 
       {/* Filter */}

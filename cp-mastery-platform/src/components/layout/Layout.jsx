@@ -4,6 +4,7 @@ import Navbar from './Navbar';
 import Sidebar from './Sidebar';
 import { cn } from '../../lib/utils';
 import { useUser } from '../../contexts/UserContext';
+import { useLang } from '../../contexts/LanguageContext';
 import { Keyboard, X, Download, Upload } from 'lucide-react';
 
 const Layout = () => {
@@ -12,6 +13,7 @@ const Layout = () => {
   const [showExportImport, setShowExportImport] = useState(false);
   const navigate = useNavigate();
   const { exportProgress, importProgress } = useUser();
+  const { t } = useLang();
 
   const handleImport = useCallback((e) => {
     const file = e.target.files[0];
@@ -31,33 +33,27 @@ const Layout = () => {
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e) => {
-      // Ctrl+K or Cmd+K → focus search
       if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
         e.preventDefault();
         const searchInput = document.querySelector('[data-search-input]');
         if (searchInput) searchInput.focus();
       }
-      // Escape → close modals
       if (e.key === 'Escape') {
         setShowShortcuts(false);
         setShowExportImport(false);
       }
-      // ? → show shortcuts (when not in input)
       if (e.key === '?' && !['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) {
         e.preventDefault();
         setShowShortcuts(prev => !prev);
       }
-      // g then h → go home (when not in input)
       if (e.key === 'h' && e.altKey && !['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) {
         e.preventDefault();
         navigate('/');
       }
-      // Alt+R → roadmap
       if (e.key === 'r' && e.altKey && !['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) {
         e.preventDefault();
         navigate('/roadmap');
       }
-      // Alt+E → export/import
       if (e.key === 'e' && e.altKey && !['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) {
         e.preventDefault();
         setShowExportImport(prev => !prev);
@@ -69,12 +65,12 @@ const Layout = () => {
   }, [navigate]);
 
   const shortcuts = [
-    { keys: ['Ctrl', 'K'], description: 'Focus search bar' },
-    { keys: ['?'], description: 'Toggle shortcuts help' },
-    { keys: ['Alt', 'H'], description: 'Go to Home' },
-    { keys: ['Alt', 'R'], description: 'Go to Roadmap' },
-    { keys: ['Alt', 'E'], description: 'Export / Import progress' },
-    { keys: ['Esc'], description: 'Close dialogs' },
+    { keys: ['Ctrl', 'K'], description: t('layout.focusSearch') },
+    { keys: ['?'], description: t('layout.toggleShortcuts') },
+    { keys: ['Alt', 'H'], description: t('layout.goHome') },
+    { keys: ['Alt', 'R'], description: t('layout.goRoadmap') },
+    { keys: ['Alt', 'E'], description: t('layout.exportImport') },
+    { keys: ['Esc'], description: t('layout.closeDialogs') },
   ];
 
   return (
@@ -84,7 +80,6 @@ const Layout = () => {
       <div className="pt-14">
         <Sidebar isOpen={sidebarOpen} />
 
-        {/* Overlay for mobile */}
         {sidebarOpen && (
           <div
             className="fixed inset-0 bg-background/80 backdrop-blur-sm z-20 lg:hidden"
@@ -102,21 +97,19 @@ const Layout = () => {
         </main>
       </div>
 
-      {/* Keyboard shortcut hint */}
       <button
         onClick={() => setShowShortcuts(true)}
         className="fixed bottom-4 right-4 p-3 bg-card border rounded-xl shadow-lg hover:shadow-xl transition-all text-muted-foreground hover:text-primary z-10"
-        title="Keyboard Shortcuts (?)"
+        title={t('layout.keyboardShortcuts')}
       >
         <Keyboard className="w-5 h-5" />
       </button>
 
-      {/* Keyboard Shortcuts Modal */}
       {showShortcuts && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm" onClick={() => setShowShortcuts(false)}>
           <div className="bg-card border rounded-2xl shadow-2xl p-6 max-w-md w-full mx-4" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-bold">Keyboard Shortcuts</h2>
+              <h2 className="text-xl font-bold">{t('layout.keyboardShortcuts')}</h2>
               <button onClick={() => setShowShortcuts(false)} className="p-1 hover:bg-accent rounded-lg">
                 <X className="w-5 h-5" />
               </button>
@@ -140,12 +133,11 @@ const Layout = () => {
         </div>
       )}
 
-      {/* Export/Import Modal */}
       {showExportImport && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm" onClick={() => setShowExportImport(false)}>
           <div className="bg-card border rounded-2xl shadow-2xl p-6 max-w-md w-full mx-4" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-bold">Export / Import Progress</h2>
+              <h2 className="text-xl font-bold">{t('layout.exportImportTitle')}</h2>
               <button onClick={() => setShowExportImport(false)} className="p-1 hover:bg-accent rounded-lg">
                 <X className="w-5 h-5" />
               </button>
@@ -156,16 +148,16 @@ const Layout = () => {
                 className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-primary text-primary-foreground font-bold rounded-xl hover:opacity-90 transition-opacity"
               >
                 <Download className="w-5 h-5" />
-                Export Progress as JSON
+                {t('layout.exportBtn')}
               </button>
-              <div className="text-center text-sm text-muted-foreground">or</div>
+              <div className="text-center text-sm text-muted-foreground">{t('layout.or')}</div>
               <label className="w-full flex items-center justify-center gap-3 px-4 py-3 border-2 border-dashed rounded-xl cursor-pointer hover:bg-accent/30 transition-colors font-bold text-muted-foreground">
                 <Upload className="w-5 h-5" />
-                Import Progress from JSON
+                {t('layout.importBtn')}
                 <input type="file" accept=".json" onChange={handleImport} className="hidden" />
               </label>
               <p className="text-xs text-muted-foreground text-center">
-                Export saves your completed topics, bookmarks, and notes. Import will overwrite current data.
+                {t('layout.exportNote')}
               </p>
             </div>
           </div>

@@ -1,11 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { categories, topics } from '../data/curriculum';
+import { useTranslatedTopics, useTranslatedCategories } from '../hooks/useTranslatedData';
 import { useUser } from '../contexts/UserContext';
+import { useLang } from '../contexts/LanguageContext';
 import * as LucideIcons from 'lucide-react';
 
 const Home = () => {
   const { completedTopics, bookmarks } = useUser();
+  const { t } = useLang();
+  const topics = useTranslatedTopics();
+  const categories = useTranslatedCategories();
   const totalTopics = topics.length;
   const completedCount = completedTopics.length;
   const bookmarkedTopics = topics.filter(t => bookmarks.includes(t.id));
@@ -27,10 +31,10 @@ const Home = () => {
       {/* Hero */}
       <section className="text-center space-y-4 max-w-2xl mx-auto">
         <h1 className="text-5xl font-bold tracking-tight bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
-          Master CP Concepts
+          {t('home.title')}
         </h1>
         <p className="text-xl text-muted-foreground">
-          A visual, interactive encyclopedia for Competitive Programming. Based on CP2 by Steven & Felix Halim.
+          {t('home.subtitle')}
         </p>
       </section>
 
@@ -38,7 +42,7 @@ const Home = () => {
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div className="p-5 bg-card border rounded-2xl space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-muted-foreground">Overall Progress</span>
+            <span className="text-sm font-medium text-muted-foreground">{t('home.overallProgress')}</span>
             <LucideIcons.TrendingUp className="w-4 h-4 text-primary" />
           </div>
           <div className="text-3xl font-black text-primary">{completedCount}<span className="text-lg text-muted-foreground font-medium">/{totalTopics}</span></div>
@@ -60,7 +64,7 @@ const Home = () => {
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium text-muted-foreground">{diff}</span>
                 <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${colors.bar} ${colors.text}`}>
-                  {topicList.length} topics
+                  {topicList.length} {t('home.topics')}
                 </span>
               </div>
               <div className={`text-3xl font-black ${colors.text}`}>{completed}<span className="text-lg text-muted-foreground font-medium">/{topicList.length}</span></div>
@@ -78,7 +82,7 @@ const Home = () => {
         <section className="space-y-4">
           <div className="flex items-center gap-2">
             <LucideIcons.BookMarked className="w-5 h-5 text-yellow-500" />
-            <h2 className="text-xl font-bold">Bookmarked Topics</h2>
+            <h2 className="text-xl font-bold">{t('home.bookmarkedTopics')}</h2>
             <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">{bookmarkedTopics.length}</span>
           </div>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -107,7 +111,7 @@ const Home = () => {
 
       {/* Categories Grid */}
       <section className="space-y-4">
-        <h2 className="text-xl font-bold">Categories</h2>
+        <h2 className="text-xl font-bold">{t('home.categories')}</h2>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {categories.map((cat) => {
             const Icon = LucideIcons[cat.icon] || LucideIcons.HelpCircle;
@@ -134,7 +138,7 @@ const Home = () => {
                   </div>
                   <div className="space-y-2 pt-2">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-muted-foreground">{catCompleted}/{catTopics.length} mastered</span>
+                      <span className="text-xs text-muted-foreground">{catCompleted}/{catTopics.length} {t('home.mastered')}</span>
                       <span className="text-xs font-bold text-primary">{Math.round(pct)}%</span>
                     </div>
                     <div className="h-1.5 bg-muted rounded-full overflow-hidden">

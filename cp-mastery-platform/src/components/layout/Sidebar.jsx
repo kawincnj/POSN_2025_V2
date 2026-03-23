@@ -1,12 +1,16 @@
 import React from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { useUser } from '../../contexts/UserContext';
-import { categories, topics } from '../../data/curriculum';
+import { useLang } from '../../contexts/LanguageContext';
+import { useTranslatedTopics, useTranslatedCategories } from '../../hooks/useTranslatedData';
 import * as LucideIcons from 'lucide-react';
 import { cn } from '../../lib/utils';
 
 const Sidebar = ({ isOpen }) => {
   const { completedTopics } = useUser();
+  const { t } = useLang();
+  const topics = useTranslatedTopics();
+  const categories = useTranslatedCategories();
   const [expandedCategories, setExpandedCategories] = React.useState([]);
 
   const toggleCategory = (id) => {
@@ -30,13 +34,13 @@ const Sidebar = ({ isOpen }) => {
           )}
         >
           <LucideIcons.LayoutGrid className="w-4 h-4" />
-          Category Explorer
+          {t('sidebar.categoryExplorer')}
         </NavLink>
 
         {/* Tools Section */}
         <div className="space-y-1">
           <h3 className="px-4 text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-2">
-            Tools
+            {t('sidebar.tools')}
           </h3>
           <NavLink
             to="/roadmap"
@@ -46,7 +50,7 @@ const Sidebar = ({ isOpen }) => {
             )}
           >
             <LucideIcons.Map className="w-3.5 h-3.5" />
-            Learning Roadmap
+            {t('sidebar.roadmap')}
           </NavLink>
           <NavLink
             to="/cheatsheet"
@@ -56,7 +60,7 @@ const Sidebar = ({ isOpen }) => {
             )}
           >
             <LucideIcons.FileText className="w-3.5 h-3.5" />
-            Cheat Sheet
+            {t('sidebar.cheatsheet')}
           </NavLink>
           <NavLink
             to="/comparisons"
@@ -66,13 +70,13 @@ const Sidebar = ({ isOpen }) => {
             )}
           >
             <LucideIcons.GitCompare className="w-3.5 h-3.5" />
-            Comparisons
+            {t('sidebar.comparisons')}
           </NavLink>
         </div>
 
         <div className="space-y-4">
           <h3 className="px-4 text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">
-            Curriculum
+            {t('sidebar.curriculum')}
           </h3>
           
           {categories.map(cat => {
@@ -121,7 +125,7 @@ const Sidebar = ({ isOpen }) => {
                     ))}
                     {catTopics.length === 0 && (
                       <div className="pl-9 pr-4 py-1.5 text-[10px] text-muted-foreground italic">
-                        Coming soon...
+                        {t('sidebar.comingSoon')}
                       </div>
                     )}
                   </div>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { topics } from '../data/curriculum';
+import { useTranslatedTopics } from '../hooks/useTranslatedData';
+import { useLang } from '../contexts/LanguageContext';
 import { ArrowRight, Check, X, Minus } from 'lucide-react';
 
 const COMPARISONS = [
@@ -114,13 +115,15 @@ const COMPARISONS = [
 ];
 
 const Comparisons = () => {
+  const { t } = useLang();
+  const topics = useTranslatedTopics();
   const [activeComparison, setActiveComparison] = useState(null);
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500 py-4">
       <div className="space-y-2">
-        <h1 className="text-4xl font-black tracking-tight">Algorithm Comparisons</h1>
-        <p className="text-lg text-muted-foreground">Side-by-side comparisons to help you choose the right algorithm.</p>
+        <h1 className="text-4xl font-black tracking-tight">{t('comparisons.title')}</h1>
+        <p className="text-lg text-muted-foreground">{t('comparisons.subtitle')}</p>
       </div>
 
       <div className="space-y-6">

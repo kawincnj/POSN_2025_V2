@@ -1,13 +1,17 @@
 import React, { useMemo } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { topics, categories } from '../data/curriculum';
+import { useTranslatedTopics, useTranslatedCategories } from '../hooks/useTranslatedData';
 import { useUser } from '../contexts/UserContext';
 import { Search, ArrowRight, BookOpen, CheckCircle2, Clock, Tag } from 'lucide-react';
+import { useLang } from '../contexts/LanguageContext';
 
 const SearchPage = () => {
   const [searchParams] = useSearchParams();
   const query = searchParams.get('q') || '';
   const { completedTopics } = useUser();
+  const { t } = useLang();
+  const topics = useTranslatedTopics();
+  const categories = useTranslatedCategories();
 
   const results = useMemo(() => {
     if (!query) return [];
@@ -37,10 +41,10 @@ const SearchPage = () => {
       <div className="border-b pb-6">
         <h1 className="text-4xl font-bold flex items-center gap-3">
           <Search className="w-8 h-8 text-primary" />
-          Search Results
+          {t('search.searchResults')}
         </h1>
         <p className="text-xl text-muted-foreground mt-2">
-          Found {results.length} result{results.length !== 1 ? 's' : ''} for "{query}"
+          {results.length} {t('search.resultsFor')} "{query}"
         </p>
       </div>
 
