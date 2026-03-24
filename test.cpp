@@ -1,27 +1,42 @@
 #include <bits/stdc++.h>
 using namespace std;
-using ll = long long;
 
-void update(int pos, int val, int n, vector<int> &ft){
-    for(; pos < n; pos += pos &(-pos)){
-        ft[pos] += val; 
+int V, E;
+vector<vector<int>> vec(100);
+bool visited[100] = {false};
+
+void bfs (int u) {
+    queue<int> q;
+
+    visited[u] = true;
+    q.push(u);
+
+    while (!q.empty()) {
+        int v = q.front();
+        q.pop();
+        if (v != 0) cout << v << " ";
+
+        for (int w : vec[v]) {
+            if (!visited[w]) {
+                visited[w] = true;
+                q.push(w);
+            }
+        }
     }
 }
 
-int query(int pos, vector<int> &ft){
-    int sum = 0;
-    for(; pos > 0; pos -= pos &(-pos)){
-        sum += ft[pos];
+int main() {
+    cin >> V >> E;
+
+    for (int i = 0; i < E; i++) {
+        int vi, wi;
+        cin >> vi >> wi;
+
+        vec[vi].push_back(wi);
+        vec[wi].push_back(vi);
     }
-    return sum;
-}
 
-int range(int l, int r, vector<int> &ft){
-    return (query(r, ft) - query(l-1, ft));
-}
+    bfs(0);
 
-int main(){
-    cin.tie(0)-> sync_with_stdio(0);
-    cout << ('z' - 'a');
-    return 0;
+
 }
